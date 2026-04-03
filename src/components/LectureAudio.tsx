@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Play, Square, Loader2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { GoogleGenAI, Modality } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 
 interface LectureAudioProps {
   textToRead: string;
@@ -29,6 +29,17 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
 
   const generateAndPlayAudio = async () => {
     setIsLoading(true);
+    
+    // Create or resume AudioContext immediately on user interaction
+    let audioCtx = (window as any).currentAudioContext;
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      (window as any).currentAudioContext = audioCtx;
+    }
+    if (audioCtx.state === 'suspended') {
+      await audioCtx.resume();
+    }
+
     try {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
@@ -40,7 +51,7 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
         model: "gemini-2.5-flash-preview-tts",
         contents: [{ parts: [{ text: textToRead }] }],
         config: {
-          responseModalities: [Modality.AUDIO],
+          responseModalities: ["AUDIO"],
           speechConfig: {
             voiceConfig: {
               prebuiltVoiceConfig: { voiceName: 'Zephyr' },
@@ -52,7 +63,7 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
       const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
       
       if (base64Audio) {
-        playRawPCM(base64Audio);
+        playRawPCM(base64Audio, audioCtx);
       } else {
         throw new Error("No audio data returned from Gemini");
       }
@@ -64,7 +75,7 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
     }
   };
 
-  const playRawPCM = async (base64Audio: string) => {
+  const playRawPCM = async (base64Audio: string, audioCtx: AudioContext) => {
     try {
       const binaryString = atob(base64Audio);
       const bytes = new Uint8Array(binaryString.length);
@@ -72,13 +83,13 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
         bytes[i] = binaryString.charCodeAt(i);
       }
 
-      // The audio is 16-bit PCM, 24000 Hz, mono
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const sampleRate = 24000;
       const numChannels = 1;
       
-      // Convert 16-bit PCM to Float32
-      const int16Array = new Int16Array(bytes.buffer);
+      // Ensure byte length is a multiple of 2 for Int16Array
+      const bufferLength = bytes.length - (bytes.length % 2);
+      const int16Array = new Int16Array(bytes.buffer, 0, bufferLength / 2);
+      
       const float32Array = new Float32Array(int16Array.length);
       for (let i = 0; i < int16Array.length; i++) {
         float32Array[i] = int16Array[i] / 32768.0;
@@ -98,9 +109,7 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
       source.start();
       setIsPlaying(true);
       
-      // We can't easily pause/resume a BufferSource, so we'll just keep track of the context
       (window as any).currentAudioSource = source;
-      (window as any).currentAudioContext = audioCtx;
 
     } catch (error) {
       console.error("Error playing PCM audio:", error);
