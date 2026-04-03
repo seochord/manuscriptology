@@ -37,7 +37,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
     >
       <button
         onClick={onBack}
-        className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors mb-6 group"
+        className="flex items-center gap-2 text-slate-500 hover:text-sky-600 transition-colors mb-6 group"
       >
         <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         <span>목차로 돌아가기</span>
@@ -47,7 +47,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
 
       <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <header className="bg-slate-50 border-b border-slate-200 p-8">
-          <div className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-medium rounded-full mb-4">
+          <div className="inline-block px-3 py-1 bg-sky-100 text-sky-700 text-sm font-medium rounded-full mb-4">
             {lecture.week}주차 • {lecture.stageTitle}
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 leading-tight">
@@ -59,7 +59,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
         </header>
 
         <div className="p-8 md:p-12">
-          <p className="text-lg text-slate-600 mb-10 leading-relaxed font-medium border-l-4 border-indigo-200 pl-4">
+          <p className="text-lg text-slate-600 mb-10 leading-relaxed font-medium border-l-4 border-sky-200 pl-4">
             {lecture.description}
           </p>
 
@@ -78,11 +78,11 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
 
           {lecture.quote && (
             <blockquote className="mt-12 p-8 bg-slate-50 rounded-2xl border border-slate-200 relative">
-              <div className="absolute top-4 left-4 text-6xl text-indigo-200 font-serif leading-none opacity-50">"</div>
+              <div className="absolute top-4 left-4 text-6xl text-sky-200 font-serif leading-none opacity-50">"</div>
               <p className="text-xl md:text-2xl font-serif text-slate-800 italic leading-snug relative z-10 mb-4">
                 {lecture.quote.text}
               </p>
-              <footer className="text-right text-indigo-700 font-medium">
+              <footer className="text-right text-sky-700 font-medium">
                 — {lecture.quote.author}
               </footer>
             </blockquote>
@@ -130,7 +130,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
           disabled={!hasNext}
           className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-colors ${
             hasNext
-              ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm'
+              ? 'bg-sky-600 text-white hover:bg-sky-700 shadow-sm'
               : 'opacity-50 cursor-not-allowed bg-slate-200 text-slate-500'
           }`}
         >

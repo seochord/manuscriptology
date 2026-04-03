@@ -27,7 +27,7 @@ export default function Home({ onSelectLecture }: HomeProps) {
       className="max-w-5xl mx-auto pb-24"
     >
       <header className="text-center mb-16 pt-12">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 text-indigo-700 font-medium text-sm mb-6">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-50 text-sky-700 font-medium text-sm mb-6">
           <ShieldCheck className="w-4 h-4" />
           전통 본문과 KJV의 권위 수호
         </div>
@@ -40,15 +40,15 @@ export default function Home({ onSelectLecture }: HomeProps) {
         
         <div className="flex flex-wrap justify-center gap-6 mt-10">
           <div className="flex items-center gap-2 text-slate-600">
-            <Clock className="w-5 h-5 text-indigo-500" />
+            <Clock className="w-5 h-5 text-sky-500" />
             <span>12주 과정</span>
           </div>
           <div className="flex items-center gap-2 text-slate-600">
-            <BookOpen className="w-5 h-5 text-indigo-500" />
+            <BookOpen className="w-5 h-5 text-sky-500" />
             <span>주 1회 30분</span>
           </div>
           <div className="flex items-center gap-2 text-slate-600">
-            <Users className="w-5 h-5 text-indigo-500" />
+            <Users className="w-5 h-5 text-sky-500" />
             <span>온라인 수강</span>
           </div>
         </div>
@@ -63,7 +63,7 @@ export default function Home({ onSelectLecture }: HomeProps) {
             transition={{ delay: idx * 0.1 }}
           >
             <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-600 text-white font-bold">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-sky-600 text-white font-bold">
                 {stageNum}
               </div>
               <h2 className="text-2xl font-bold text-slate-800">{stage.title}</h2>
@@ -74,12 +74,12 @@ export default function Home({ onSelectLecture }: HomeProps) {
                 <div
                   key={lecture.week}
                   onClick={() => onSelectLecture(lecture.week)}
-                  className="group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all cursor-pointer flex flex-col h-full"
+                  className="group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-sky-300 transition-all cursor-pointer flex flex-col h-full"
                 >
-                  <div className="text-sm font-medium text-indigo-600 mb-2">
+                  <div className="text-sm font-medium text-sky-600 mb-2">
                     {lecture.week}주차
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-700 transition-colors">
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-sky-700 transition-colors">
                     {lecture.title}
                   </h3>
                   <p className="text-slate-600 text-sm line-clamp-3 mb-4 flex-grow">
@@ -89,8 +89,8 @@ export default function Home({ onSelectLecture }: HomeProps) {
                     <span className="text-sm font-medium text-slate-500">
                       강사: {lecture.instructor}
                     </span>
-                    <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
-                      <BookOpen className="w-4 h-4 text-slate-400 group-hover:text-indigo-600" />
+                    <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-sky-50 transition-colors">
+                      <BookOpen className="w-4 h-4 text-slate-400 group-hover:text-sky-600" />
                     </div>
                   </div>
                 </div>

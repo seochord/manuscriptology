@@ -99,7 +99,7 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
   return (
     <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+        <div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600">
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : isPlaying ? (
@@ -115,10 +115,10 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
       </div>
       {isPlaying && (
         <div className="flex gap-1">
-          <div className="w-1.5 h-4 bg-indigo-400 rounded-full animate-[bounce_1s_infinite_0ms]"></div>
-          <div className="w-1.5 h-6 bg-indigo-500 rounded-full animate-[bounce_1s_infinite_200ms]"></div>
-          <div className="w-1.5 h-3 bg-indigo-400 rounded-full animate-[bounce_1s_infinite_400ms]"></div>
-          <div className="w-1.5 h-5 bg-indigo-600 rounded-full animate-[bounce_1s_infinite_600ms]"></div>
+          <div className="w-1.5 h-4 bg-sky-400 rounded-full animate-[bounce_1s_infinite_0ms]"></div>
+          <div className="w-1.5 h-6 bg-sky-500 rounded-full animate-[bounce_1s_infinite_200ms]"></div>
+          <div className="w-1.5 h-3 bg-sky-400 rounded-full animate-[bounce_1s_infinite_400ms]"></div>
+          <div className="w-1.5 h-5 bg-sky-600 rounded-full animate-[bounce_1s_infinite_600ms]"></div>
         </div>
       )}
     </div>
