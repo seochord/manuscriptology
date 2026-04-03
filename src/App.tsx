@@ -46,7 +46,7 @@ export default function App() {
             <div className="bg-sky-600 p-2 rounded-lg group-hover:bg-sky-700 transition-colors">
               <BookMarked className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl text-slate-900 tracking-tight">Manuscriptology</span>
+            <span className="font-bold text-xl text-slate-900 tracking-tight">성경 사본학</span>
           </div>
           {currentWeek && (
             <div className="hidden md:flex items-center gap-4 text-sm font-medium text-slate-500">
