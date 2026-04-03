@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Play, Square, Loader2 } from 'lucide-react';
-import { GoogleGenAI, Modality } from '@google/genai';
+import { motion } from 'motion/react';
+import { GoogleGenAI, Modality } from "@google/genai";
 
 interface LectureAudioProps {
   textToRead: string;
@@ -12,7 +13,11 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
 
   const stopAudio = () => {
     if ((window as any).currentAudioSource) {
-      (window as any).currentAudioSource.stop();
+      try {
+        (window as any).currentAudioSource.stop();
+      } catch (e) {
+        // Ignore errors if already stopped
+      }
       setIsPlaying(false);
     }
   };
@@ -25,8 +30,12 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
   const generateAndPlayAudio = async () => {
     setIsLoading(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        throw new Error("Gemini API Key is missing. Please check your environment.");
+      }
+
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash-preview-tts",
         contents: [{ parts: [{ text: textToRead }] }],
@@ -34,7 +43,7 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
             voiceConfig: {
-              prebuiltVoiceConfig: { voiceName: 'Zephyr' }, // Zephyr is a clear male voice
+              prebuiltVoiceConfig: { voiceName: 'Zephyr' },
             },
           },
         },
@@ -44,10 +53,12 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
       
       if (base64Audio) {
         playRawPCM(base64Audio);
+      } else {
+        throw new Error("No audio data returned from Gemini");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to generate audio:", error);
-      alert("오디오 생성에 실패했습니다.");
+      alert(`오디오 생성에 실패했습니다: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -97,28 +108,50 @@ export default function LectureAudio({ textToRead }: LectureAudioProps) {
   };
 
   return (
-    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600">
+    <div className="bg-white border border-slate-200 rounded-3xl p-6 mb-12 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-center gap-5">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={isPlaying ? stopAudio : generateAndPlayAudio}
+          disabled={isLoading}
+          className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-lg ${
+            isPlaying 
+              ? 'bg-slate-900 text-white shadow-slate-200' 
+              : 'bg-sky-600 text-white shadow-sky-200 hover:bg-sky-700'
+          }`}
+        >
           {isLoading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
+            <Loader2 className="w-6 h-6 animate-spin" />
           ) : isPlaying ? (
-            <Square className="w-5 h-5 fill-current cursor-pointer" onClick={stopAudio} />
+            <Square className="w-6 h-6 fill-current" />
           ) : (
-            <Play className="w-5 h-5 fill-current cursor-pointer ml-1" onClick={generateAndPlayAudio} />
+            <Play className="w-6 h-6 fill-current ml-1" />
           )}
-        </div>
+        </motion.button>
         <div>
-          <h3 className="font-medium text-slate-900">강의 듣기</h3>
-          <p className="text-sm text-slate-500">AI 음성으로 강의 내용을 들을 수 있습니다.</p>
+          <h3 className="font-black text-slate-900 tracking-tight">AI 오디오 강의</h3>
+          <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Listen to the lecture with AI voice</p>
         </div>
       </div>
       {isPlaying && (
-        <div className="flex gap-1">
-          <div className="w-1.5 h-4 bg-sky-400 rounded-full animate-[bounce_1s_infinite_0ms]"></div>
-          <div className="w-1.5 h-6 bg-sky-500 rounded-full animate-[bounce_1s_infinite_200ms]"></div>
-          <div className="w-1.5 h-3 bg-sky-400 rounded-full animate-[bounce_1s_infinite_400ms]"></div>
-          <div className="w-1.5 h-5 bg-sky-600 rounded-full animate-[bounce_1s_infinite_600ms]"></div>
+        <div className="flex items-end gap-1.5 h-8 px-4">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <motion.div
+              key={i}
+              animate={{ 
+                height: [8, 24, 12, 32, 16][i % 5],
+                opacity: [0.5, 1, 0.7, 1, 0.6][i % 5]
+              }}
+              transition={{ 
+                repeat: Infinity, 
+                duration: 0.8 + i * 0.1, 
+                ease: "easeInOut",
+                repeatType: "mirror"
+              }}
+              className="w-1.5 bg-sky-500 rounded-full"
+            />
+          ))}
         </div>
       )}
     </div>

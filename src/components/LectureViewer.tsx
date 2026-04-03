@@ -29,12 +29,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
   }, [lecture]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="max-w-4xl mx-auto pb-24"
-    >
+    <div className="max-w-4xl mx-auto pb-24">
       <button
         onClick={onBack}
         className="flex items-center gap-2 text-slate-500 hover:text-sky-600 transition-colors mb-6 group"
@@ -46,69 +41,119 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
       <LectureAudio textToRead={textToRead} />
 
       <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <header className="bg-slate-50 border-b border-slate-200 p-8">
-          <div className="inline-block px-3 py-1 bg-sky-100 text-sky-700 text-sm font-medium rounded-full mb-4">
-            {lecture.week}주차 • {lecture.stageTitle}
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 leading-tight">
-            {lecture.title}
-          </h1>
-          <div className="flex items-center gap-3 text-slate-600">
-            <span className="font-medium">강사: {lecture.instructor}</span>
+        <header className="bg-white border-b border-slate-100 p-8 md:p-16 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-sky-50 rounded-full -mr-48 -mt-48 blur-3xl opacity-50"></div>
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-3 px-4 py-1.5 bg-sky-50 text-sky-700 text-[10px] font-black rounded-full mb-8 uppercase tracking-[0.2em] border border-sky-100/50">
+              Week {lecture.week} • {lecture.stageTitle}
+            </div>
+            <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-8 leading-[1.15] tracking-tight">
+              {lecture.title}
+            </h1>
+            <div className="flex items-center gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-600 to-blue-700 flex items-center justify-center text-white font-black text-xl shadow-xl shadow-sky-200 rotate-3">
+                {lecture.instructor.charAt(0)}
+              </div>
+              <div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Course Instructor</div>
+                <div className="text-slate-900 font-black text-lg tracking-tight">{lecture.instructor}</div>
+              </div>
+            </div>
           </div>
         </header>
 
-        <div className="p-8 md:p-12">
-          <p className="text-lg text-slate-600 mb-10 leading-relaxed font-medium border-l-4 border-sky-200 pl-4">
-            {lecture.description}
-          </p>
-
-          <div className="space-y-12 text-slate-800 text-lg leading-[1.8]">
-            {lecture.content.map((section, idx) => (
-              <section key={idx} className="space-y-4">
-                <h2 className="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-3 mb-6">
-                  {section.heading}
-                </h2>
-                {section.paragraphs.map((paragraph, pIdx) => (
-                  <p key={pIdx} className="text-slate-700">{paragraph}</p>
-                ))}
-              </section>
-            ))}
-          </div>
-
-          {lecture.quote && (
-            <blockquote className="mt-12 p-8 bg-slate-50 rounded-2xl border border-slate-200 relative">
-              <div className="absolute top-4 left-4 text-6xl text-sky-200 font-serif leading-none opacity-50">"</div>
-              <p className="text-xl md:text-2xl font-serif text-slate-800 italic leading-snug relative z-10 mb-4">
-                {lecture.quote.text}
+        <div className="p-8 md:p-20">
+          <div className="max-w-3xl mx-auto">
+            <div className="relative mb-20 group">
+              <div className="absolute -left-8 top-0 bottom-0 w-1.5 bg-gradient-to-b from-sky-500 to-blue-600 rounded-full shadow-[0_0_15px_rgba(14,165,233,0.3)]"></div>
+              <p className="text-2xl text-slate-600 leading-relaxed font-medium italic tracking-tight">
+                {lecture.description}
               </p>
-              <footer className="text-right text-sky-700 font-medium">
-                — {lecture.quote.author}
-              </footer>
-            </blockquote>
-          )}
-
-          {lecture.chart && (
-            <div className="mt-12">
-              <h3 className="text-xl font-bold text-slate-900 mb-4">{lecture.chart.title}</h3>
-              <div className="relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
-                <img
-                  src={lecture.chart.url}
-                  alt={lecture.chart.title}
-                  className="w-full h-auto object-cover cursor-pointer transition-transform duration-500 group-hover:scale-[1.02]"
-                  onClick={() => setIsImageExpanded(true)}
-                  referrerPolicy="no-referrer"
-                />
-                <button
-                  onClick={() => setIsImageExpanded(true)}
-                  className="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <Maximize2 className="w-5 h-5 text-slate-700" />
-                </button>
-              </div>
-              <p className="text-sm text-slate-500 mt-3">{lecture.chart.description}</p>
             </div>
-          )}
+
+            <div className="space-y-24 text-slate-800 text-lg leading-[2]">
+              {lecture.content.map((section, idx) => (
+                <section key={idx} className="relative">
+                  <div className="flex items-center gap-6 mb-10">
+                    <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-sky-600 font-black text-xl border border-slate-100 shadow-sm">
+                      {idx + 1}
+                    </span>
+                    <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+                      {section.heading}
+                    </h2>
+                    <div className="flex-grow h-px bg-gradient-to-r from-slate-100 to-transparent"></div>
+                  </div>
+                  <div className="space-y-8">
+                    {section.paragraphs.map((paragraph, pIdx) => (
+                      <p key={pIdx} className="text-slate-700 font-medium leading-[2.1]">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            {lecture.quote && (
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mt-32 p-12 md:p-16 bg-slate-900 rounded-[3rem] text-white relative overflow-hidden shadow-3xl shadow-sky-900/20"
+              >
+                <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full -ml-24 -mb-24 blur-3xl"></div>
+                
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-sky-500/20 rounded-2xl flex items-center justify-center mb-10">
+                    <span className="text-5xl font-serif text-sky-400 leading-none mt-4">"</span>
+                  </div>
+                  <p className="text-2xl md:text-4xl font-serif italic leading-tight mb-12 tracking-tight">
+                    {lecture.quote.text}
+                  </p>
+                  <div className="flex items-center justify-end gap-4">
+                    <div className="h-px w-12 bg-sky-500/50"></div>
+                    <footer className="text-sky-400 font-black tracking-[0.2em] uppercase text-sm">
+                      {lecture.quote.author}
+                    </footer>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {lecture.chart && (
+              <div className="mt-32">
+                <div className="flex items-center justify-between mb-10">
+                  <div className="flex items-center gap-4">
+                    <div className="w-3 h-10 bg-sky-600 rounded-full"></div>
+                    <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">{lecture.chart.title}</h3>
+                  </div>
+                </div>
+                <div className="relative group rounded-[2.5rem] overflow-hidden border border-slate-200 bg-white shadow-2xl shadow-slate-200/50">
+                  <img
+                    src={lecture.chart.url}
+                    alt={lecture.chart.title}
+                    className="w-full h-auto object-cover cursor-pointer transition-all duration-1000 group-hover:scale-110 group-hover:rotate-1"
+                    onClick={() => setIsImageExpanded(true)}
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <button
+                    onClick={() => setIsImageExpanded(true)}
+                    className="absolute bottom-8 right-8 bg-white text-slate-900 px-6 py-3 rounded-2xl shadow-2xl font-black text-xs uppercase tracking-widest flex items-center gap-3 opacity-0 group-hover:opacity-100 translate-y-8 group-hover:translate-y-0 transition-all duration-500 hover:bg-sky-600 hover:text-white"
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                    Expand Visual
+                  </button>
+                </div>
+                <div className="mt-8 p-8 bg-white rounded-3xl border border-slate-100 shadow-sm">
+                  <p className="text-slate-500 leading-relaxed italic font-medium">
+                    {lecture.chart.description}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </article>
 
@@ -167,6 +212,6 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
