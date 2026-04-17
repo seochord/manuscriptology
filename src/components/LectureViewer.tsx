@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react';
 import { curriculumData, Lecture } from '../data/curriculum';
 import LectureAudio from './LectureAudio';
+import CommentSection from './CommentSection';
 
 interface LectureViewerProps {
   lecture: Lecture;
@@ -28,11 +29,62 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
     return text;
   }, [lecture]);
 
+  const renderTextWithLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    return parts.map((part, i) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:text-brand-800 hover:underline font-bold break-all">
+            [관련자료링크]
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
+  const renderFormattedText = (text: string, isCaption: boolean = false) => {
+    if (text.includes(' | ')) {
+      const parts = text.split(' | ');
+      return (
+        <div className={`bg-slate-50 rounded-2xl p-5 md:p-6 border border-slate-100 ${isCaption ? 'w-full' : ''}`}>
+          <h3 className="text-lg font-bold text-slate-900 mb-4 pb-4 border-b border-slate-200">
+            {renderTextWithLinks(parts[0])}
+          </h3>
+          <ul className="space-y-3">
+            {parts.slice(1).map((part, idx) => {
+              const spText = part.trim();
+              if (!spText) return null;
+              const isVerse = /^-\s?[가-힣]{1,2}\s?\d+/.test(spText);
+              
+              return (
+                <li key={idx} className="flex items-start gap-3 text-slate-700 leading-[1.8]">
+                  {isVerse ? (
+                    <span className="text-brand-500 mt-1 font-bold text-lg">•</span>
+                  ) : (
+                    <span className="text-brand-500 mt-1.5 text-sm">■</span>
+                  )}
+                  <span>{renderTextWithLinks(isVerse ? spText.replace(/^-\s?/, '').trim() : spText)}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      );
+    }
+    return (
+      <p className="text-slate-700 font-medium leading-[2.1]">
+        {renderTextWithLinks(text)}
+      </p>
+    );
+  };
+
   return (
     <div className="max-w-4xl mx-auto pb-24">
       <button
         onClick={onBack}
-        className="flex items-center gap-2 text-slate-500 hover:text-sky-600 transition-colors mb-6 group"
+        className="flex items-center gap-2 text-slate-500 hover:text-brand-600 transition-colors mb-6 group"
       >
         <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         <span>목차로 돌아가기</span>
@@ -42,12 +94,18 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
 
       <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <header className="bg-white border-b border-slate-100 p-10 md:p-20 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sky-50 rounded-full -mr-64 -mt-64 blur-[100px] opacity-60"></div>
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-50 rounded-full -ml-32 -mb-32 blur-[80px] opacity-40"></div>
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-50 rounded-full -mr-64 -mt-64 blur-[100px] opacity-60"></div>
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-brand-100 rounded-full -ml-32 -mb-32 blur-[80px] opacity-40"></div>
           
           <div className="relative z-10 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-3 px-5 py-2 bg-slate-900 text-white text-[9px] font-black rounded-full mb-10 uppercase tracking-[0.3em] shadow-xl shadow-slate-200">
-              Week {lecture.week} <span className="opacity-30 mx-1">|</span> {lecture.stageTitle}
+              {lecture.week === 0 ? (
+                lecture.stageTitle
+              ) : (
+                <>
+                  Week {lecture.week} <span className="opacity-30 mx-1">|</span> {lecture.stageTitle}
+                </>
+              )}
             </div>
             <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-0 leading-[1.1] tracking-tighter">
               {lecture.title}
@@ -58,7 +116,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
         <div className="p-8 md:p-20">
           <div className="max-w-3xl mx-auto">
             <div className="relative mb-24 group">
-              <div className="absolute -left-10 top-0 bottom-0 w-2 bg-gradient-to-b from-sky-500 via-blue-600 to-indigo-700 rounded-full shadow-[0_0_20px_rgba(14,165,233,0.4)]"></div>
+              <div className="absolute -left-10 top-0 bottom-0 w-2 bg-gradient-to-b from-brand-400 via-brand-600 to-brand-800 rounded-full shadow-[0_0_20px_rgba(88,145,173,0.4)]"></div>
               <p className="text-2xl md:text-3xl text-slate-600 leading-[1.6] font-medium italic tracking-tight">
                 {lecture.description}
               </p>
@@ -68,7 +126,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
               {lecture.content.map((section, idx) => (
                 <section key={idx} className="relative">
                   <div className="flex items-center gap-6 mb-10">
-                    <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-sky-600 font-black text-xl border border-slate-100 shadow-sm">
+                    <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-brand-600 font-black text-xl border border-slate-100 shadow-sm">
                       {idx + 1}
                     </span>
                     <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
@@ -77,11 +135,32 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
                     <div className="flex-grow h-px bg-gradient-to-r from-slate-100 to-transparent"></div>
                   </div>
                   <div className="space-y-8">
-                    {section.paragraphs.map((paragraph, pIdx) => (
-                      <p key={pIdx} className="text-slate-700 font-medium leading-[2.1]">
-                        {paragraph}
-                      </p>
+                    {section.paragraphs
+                      .filter(p => !(section.images && section.images.some(img => img.caption === p)))
+                      .map((paragraph, pIdx) => (
+                      <div key={pIdx}>
+                        {renderFormattedText(paragraph)}
+                      </div>
                     ))}
+                    {section.images && section.images.length > 0 && (
+                      <div className="flex flex-col mt-10 border-t border-slate-200">
+                        {section.images.map((img, iIdx) => (
+                          <div key={iIdx} className="flex flex-col md:flex-row gap-6 items-center py-6 border-b border-slate-200 group">
+                            <div className="w-full md:w-1/3 aspect-[4/3] overflow-hidden bg-slate-100 rounded-xl shrink-0 shadow-sm">
+                              <img 
+                                src={img.url} 
+                                alt={img.alt} 
+                                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" 
+                                referrerPolicy="no-referrer" 
+                              />
+                            </div>
+                            <div className="w-full md:w-2/3 flex flex-col justify-center">
+                              {renderFormattedText(img.caption, true)}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </section>
               ))}
@@ -92,21 +171,21 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="mt-32 p-12 md:p-16 bg-slate-900 rounded-[3rem] text-white relative overflow-hidden shadow-3xl shadow-sky-900/20"
+                className="mt-32 p-12 md:p-16 bg-slate-900 rounded-[3rem] text-white relative overflow-hidden shadow-3xl shadow-brand-900/20"
               >
-                <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full -ml-24 -mb-24 blur-3xl"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-400/10 rounded-full -ml-24 -mb-24 blur-3xl"></div>
                 
                 <div className="relative z-10">
-                  <div className="w-16 h-16 bg-sky-500/20 rounded-2xl flex items-center justify-center mb-10">
-                    <span className="text-5xl font-serif text-sky-400 leading-none mt-4">"</span>
+                  <div className="w-16 h-16 bg-brand-500/20 rounded-2xl flex items-center justify-center mb-10">
+                    <span className="text-5xl font-serif text-accent-400 leading-none mt-4">"</span>
                   </div>
                   <p className="text-2xl md:text-4xl font-serif italic leading-tight mb-12 tracking-tight">
                     {lecture.quote.text}
                   </p>
                   <div className="flex items-center justify-end gap-4">
-                    <div className="h-px w-12 bg-sky-500/50"></div>
-                    <footer className="text-sky-400 font-black tracking-[0.2em] uppercase text-sm">
+                    <div className="h-px w-12 bg-accent-400/50"></div>
+                    <footer className="text-accent-400 font-black tracking-[0.2em] uppercase text-sm">
                       {lecture.quote.author}
                     </footer>
                   </div>
@@ -118,7 +197,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
               <div className="mt-32">
                 <div className="flex items-center justify-between mb-10">
                   <div className="flex items-center gap-4">
-                    <div className="w-3 h-10 bg-sky-600 rounded-full"></div>
+                    <div className="w-3 h-10 bg-brand-600 rounded-full"></div>
                     <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">{lecture.chart.title}</h3>
                   </div>
                 </div>
@@ -133,7 +212,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <button
                     onClick={() => setIsImageExpanded(true)}
-                    className="absolute bottom-8 right-8 bg-white text-slate-900 px-6 py-3 rounded-2xl shadow-2xl font-black text-xs uppercase tracking-widest flex items-center gap-3 opacity-0 group-hover:opacity-100 translate-y-8 group-hover:translate-y-0 transition-all duration-500 hover:bg-sky-600 hover:text-white"
+                    className="absolute bottom-8 right-8 bg-white text-slate-900 px-6 py-3 rounded-2xl shadow-2xl font-black text-xs uppercase tracking-widest flex items-center gap-3 opacity-0 group-hover:opacity-100 translate-y-8 group-hover:translate-y-0 transition-all duration-500 hover:bg-brand-600 hover:text-white"
                   >
                     <Maximize2 className="w-4 h-4" />
                     Expand Visual
@@ -149,6 +228,8 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
           </div>
         </div>
       </article>
+
+      <CommentSection lectureId={lecture.week} />
 
       <div className="flex justify-between items-center mt-8">
         <button
@@ -168,7 +249,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
           disabled={!hasNext}
           className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-colors ${
             hasNext
-              ? 'bg-sky-600 text-white hover:bg-sky-700 shadow-sm'
+              ? 'bg-brand-600 text-white hover:bg-brand-700 shadow-sm'
               : 'opacity-50 cursor-not-allowed bg-slate-200 text-slate-500'
           }`}
         >

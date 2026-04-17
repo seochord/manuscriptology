@@ -5,6 +5,20 @@
 @theme {
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   --font-serif: "Noto Serif KR", ui-serif, Georgia, serif;
+  
+  --color-brand-50: #f4f7f9;
+  --color-brand-100: #e3ebf1;
+  --color-brand-200: #cddce6;
+  --color-brand-300: #a9c5d6;
+  --color-brand-400: #7ba8c9;
+  --color-brand-500: #5891ad;
+  --color-brand-600: #427594;
+  --color-brand-700: #335c81;
+  --color-brand-800: #2e4e6c;
+  --color-brand-900: #29425a;
+  
+  --color-accent-400: #e9c46a;
+  --color-accent-500: #ceae75;
 }
 
 @layer base {

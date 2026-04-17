@@ -1,0 +1,468 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ChevronLeft, ChevronRight, ScrollText, Library, BookOpen, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
+import { Lecture } from '../data/curriculum';
+import LectureAudio from './LectureAudio';
+import CommentSection from './CommentSection';
+import { recordingVerses, preservationVerses, manuscriptUsageVerses, translationUsageVerses, bibleStructure, bibleStats, bookThemes, otManuscripts, ntManuscripts, bibleLessonsSummary } from '../data/bibleData';
+
+interface BibleOverviewProps {
+  lecture: Lecture;
+  onBack: () => void;
+  onNext: () => void;
+  onPrev: () => void;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export default function BibleOverview({ lecture, onBack, onNext, onPrev, hasNext, hasPrev }: BibleOverviewProps) {
+  const [showAllVerses, setShowAllVerses] = useState(false);
+
+  return (
+    <div className="max-w-4xl mx-auto pb-24">
+      <button
+        onClick={onBack}
+        className="flex items-center gap-2 text-slate-500 hover:text-brand-600 transition-colors mb-6 group"
+      >
+        <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        <span>목차로 돌아가기</span>
+      </button>
+
+      <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <header className="bg-white border-b border-slate-100 p-10 md:p-20 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-50 rounded-full -mr-64 -mt-64 blur-[100px] opacity-60"></div>
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-brand-100 rounded-full -ml-32 -mb-32 blur-[80px] opacity-40"></div>
+          
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-3 px-5 py-2 bg-slate-900 text-white text-[9px] font-black rounded-full mb-10 uppercase tracking-[0.3em] shadow-xl shadow-slate-200">
+              {lecture.stageTitle}
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-0 leading-[1.1] tracking-tighter">
+              {lecture.title}
+            </h1>
+          </div>
+        </header>
+
+        <div className="p-8 md:p-20">
+          <div className="max-w-3xl mx-auto">
+            <div className="relative mb-16 group">
+              <div className="absolute -left-10 top-0 bottom-0 w-2 bg-gradient-to-b from-brand-400 via-brand-600 to-brand-800 rounded-full shadow-[0_0_20px_rgba(88,145,173,0.4)]"></div>
+              <p className="text-2xl md:text-3xl text-slate-600 leading-[1.6] font-medium italic tracking-tight">
+                {lecture.description}
+              </p>
+            </div>
+
+            <div className="space-y-24">
+              
+              {/* Section 1: 성경기록에 대한 말씀 */}
+              {lecture.week === 0 && (
+                <>
+              {/* Section 1: 교훈 최종 정리 */}
+              <section className="mb-16">
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-brand-600 font-black text-xl border border-slate-100 shadow-sm">1</span>
+                  <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">성경말씀에 관한 주제</h2>
+                </div>
+
+                <div className="mb-8 p-6 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
+                   <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
+                     {bibleLessonsSummary.map((summary, idx) => (
+                        <li key={idx} className="flex gap-3 items-start text-slate-800 font-bold text-base md:text-lg">
+                           <span className="text-brand-600 font-black mt-0.5">{idx + 1}.</span> 
+                           <span>{summary.title.replace(/^\d+\.\s*/, '')}</span>
+                        </li>
+                     ))}
+                   </ul>
+                </div>
+
+                <div className="space-y-6">
+                  {bibleLessonsSummary.map((summary, idx) => (
+                    <div key={idx} className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:border-brand-300 transition-all duration-300 flex flex-col group">
+                      <div className="flex items-center gap-4 mb-5 pb-5 border-b border-slate-100">
+                        <div className="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-black shrink-0 group-hover:scale-110 transition-transform">
+                          {idx + 1}
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-800 leading-tight">
+                          {summary.title.replace(/^\d+\.\s*/, '')}
+                        </h3>
+                      </div>
+                      <p className="text-slate-700 leading-[1.8] font-normal text-[15px] md:text-[16px] flex-grow break-keep">
+                        {summary.content}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Section 2: 성경 구절 더보기 */}
+              <section>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-brand-600 font-black text-xl border border-slate-100 shadow-sm">2</span>
+                    <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">관련 성경구절 모두 보기</h2>
+                  </div>
+                  <button
+                     onClick={() => setShowAllVerses(!showAllVerses)}
+                     className="flex items-center gap-2 px-4 py-2.5 bg-brand-50 hover:bg-brand-100 text-brand-700 rounded-xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                     {showAllVerses ? (
+                       <>기록된 원문 숨기기 <ChevronUp className="w-4 h-4"/></>
+                     ) : (
+                       <>모든 구절 더보기 ({recordingVerses.length}개) <ChevronDown className="w-4 h-4"/></>
+                     )}
+                  </button>
+                </div>
+
+                <AnimatePresence>
+                  {showAllVerses && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-100 mt-4 mb-8">
+                        <div className="space-y-6">
+                          {recordingVerses.map((verse, idx) => (
+                            <div key={idx} className="space-y-3 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                              <div className="flex flex-col md:flex-row md:items-start gap-4">
+                                <span className="shrink-0 inline-block px-3 py-1 bg-brand-100 text-brand-700 text-sm font-bold rounded-md whitespace-nowrap">{verse.reference}</span>
+                                <p className="text-slate-800 leading-relaxed text-base font-medium">{verse.text}</p>
+                              </div>
+                              <div className="bg-brand-50 border-l-4 border-brand-400 p-4 rounded-r-lg mt-2">
+                                <p className="text-sm font-bold text-brand-800"><span className="text-brand-600 mr-2">📌 도출되는 교훈:</span> {verse.lesson}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                {!showAllVerses && (
+                  <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-6 text-center text-slate-500 font-medium my-8">
+                    우측 상단의 '모든 구절 더보기' 버튼을 클릭하면 성경 구절 원문 전체와 도출된 교훈들을 확인할 수 있습니다.
+                  </div>
+                )}
+              </section>
+              </>
+              )}
+
+              {/* Section 2: 성경의 구성 */}
+              {lecture.week === 1 && (
+                <>
+              <section>
+                <div className="flex items-center gap-4 mb-8">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-brand-600 font-black text-xl border border-slate-100 shadow-sm">1</span>
+                  <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">성경의 구성</h2>
+                </div>
+
+                <div className="space-y-8">
+                  <div className="bg-white rounded-2xl overflow-hidden border border-slate-200">
+                    <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                      <h3 className="text-lg font-bold text-slate-800">성경의 세 구분</h3>
+                      <p className="text-xs text-slate-500 mt-1">참고: 성경통론, 바이블마스터, 성경주석, 성경익스프레스, 성서핸드북, David Reagon, Roy B. Zuck</p>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                          <tr className="bg-slate-50/50 text-slate-500 text-sm uppercase tracking-wider">
+                            <th className="px-6 py-3 font-semibold border-b border-slate-200">구분</th>
+                            <th className="px-6 py-3 font-semibold border-b border-slate-200">역사서</th>
+                            <th className="px-6 py-3 font-semibold border-b border-slate-200">시가서(구약), 서신서(신약)</th>
+                            <th className="px-6 py-3 font-semibold border-b border-slate-200">예언서</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {bibleStructure.threeDivisions.map((item, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/50">
+                              <td className="px-6 py-3 text-slate-800 font-medium whitespace-nowrap">{item.testament}</td>
+                              <td className="px-6 py-3 text-slate-700">{item.history}</td>
+                              <td className="px-6 py-3 text-slate-700">{item.poetryEpistles}</td>
+                              <td className="px-6 py-3 text-slate-700">{item.prophecy}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-2xl overflow-hidden border border-slate-200">
+                    <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                      <h3 className="text-lg font-bold text-slate-800">성경의 구성 상세 (통계)</h3>
+                      <p className="text-xs text-slate-500 mt-1">참고: Brandon Peterson, 피터럭크만, 할레이, 조병호, 테리홀</p>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                          <tr className="bg-slate-50/50 text-slate-500 text-sm uppercase tracking-wider">
+                            <th className="px-6 py-3 font-semibold border-b border-slate-200">구분</th>
+                            <th className="px-6 py-3 font-semibold border-b border-slate-200">신,구약 (전체)</th>
+                            <th className="px-6 py-3 font-semibold border-b border-slate-200">구약</th>
+                            <th className="px-6 py-3 font-semibold border-b border-slate-200">신약</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {bibleStats.overview.map((item, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/50">
+                              <td className="px-6 py-3 font-medium text-slate-800 whitespace-nowrap">{item.category}</td>
+                              <td className="px-6 py-3 text-slate-700">{item.total}</td>
+                              {item.nt ? (
+                                <>
+                                  <td className="px-6 py-3 text-slate-700 whitespace-pre-line leading-relaxed pb-4">{item.ot}</td>
+                                  <td className="px-6 py-3 text-slate-700">{item.nt}</td>
+                                </>
+                              ) : (
+                                <td colSpan={2} className="px-6 py-3 text-slate-700 whitespace-pre-line leading-relaxed pb-4">{item.ot}</td>
+                              )}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-2xl overflow-hidden border border-slate-200">
+                    <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                      <h3 className="text-lg font-bold text-slate-800">기타 구성</h3>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse">
+                        <tbody className="divide-y divide-slate-100">
+                          {bibleStats.misc.map((item, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/50">
+                              <td className="px-6 py-3 font-medium text-slate-800 w-1/3 bg-slate-50/30">{item.category}</td>
+                              <td className="px-6 py-3 text-slate-700">{item.content}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div className="bg-white rounded-2xl overflow-hidden border border-slate-200">
+                      <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 className="text-lg font-bold text-slate-800">구약(유대인식)-24권</h3>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                          <thead>
+                            <tr className="bg-slate-50/50 text-slate-500 text-sm uppercase tracking-wider">
+                              <th className="px-6 py-3 font-semibold border-b border-slate-200 w-1/3">구분</th>
+                              <th className="px-6 py-3 font-semibold border-b border-slate-200">책 이름</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {bibleStructure.jewishDivisions.map((item, idx) => (
+                              <tr key={idx} className="hover:bg-slate-50/50">
+                                <td className="px-6 py-3 font-medium text-slate-800 bg-slate-50/30">
+                                  {item.name}
+                                </td>
+                                <td className="px-6 py-3 text-slate-700 text-sm leading-relaxed">{item.books}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-2xl overflow-hidden border border-slate-200">
+                      <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 className="text-lg font-bold text-slate-800">구약(이방인식)-39권 및 신약-27권</h3>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse min-w-[800px]">
+                          <thead>
+                            <tr className="bg-slate-50/50 text-slate-500 text-sm uppercase tracking-wider">
+                              <th className="px-6 py-3 font-semibold border-b border-slate-200 w-1/6">구약(이방인식)-39권</th>
+                              <th className="px-6 py-3 font-semibold border-b border-slate-200 w-2/6">책 이름</th>
+                              <th className="px-6 py-3 font-semibold border-b border-slate-200 w-1/6">신약-27권</th>
+                              <th className="px-6 py-3 font-semibold border-b border-slate-200 w-2/6">책 이름</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {bibleStructure.gentileDivisionsCombined.map((item, idx) => (
+                              <tr key={idx} className="hover:bg-slate-50/50">
+                                <td className="px-6 py-3 font-medium text-slate-800 bg-slate-50/30">{item.otName}</td>
+                                <td className="px-6 py-3 text-slate-700 text-sm leading-relaxed">{item.otBooks}</td>
+                                <td className="px-6 py-3 font-medium text-slate-800 bg-slate-50/30">{item.ntName}</td>
+                                <td className="px-6 py-3 text-slate-700 text-sm leading-relaxed">{item.ntBooks}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Section 3: 권별 주제 대조표 */}
+              <section>
+                <div className="flex items-center gap-4 mb-8">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-brand-600 font-black text-xl border border-slate-100 shadow-sm">2</span>
+                  <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">성경 권별 주제 대조표</h2>
+                </div>
+
+                <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                  <div className="overflow-x-auto max-h-[500px] overflow-y-auto relative">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="sticky top-0 z-10 bg-slate-100 shadow-sm">
+                        <tr className="text-slate-600 text-sm uppercase tracking-wider">
+                          <th className="px-6 py-3 font-bold border-b border-slate-200 w-1/4">성경 각 권</th>
+                          <th className="px-6 py-3 font-bold border-b border-slate-200 w-3/8">존 필립스 (John Phillips)</th>
+                          <th className="px-6 py-3 font-bold border-b border-slate-200 w-3/8">할레이 (H. H. Halley)</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {bookThemes.map((item, idx) => (
+                          <tr key={idx} className="hover:bg-slate-50/80">
+                            <td className="px-6 py-2.5 font-bold text-slate-800 bg-slate-50/30">{item.book}</td>
+                            <td className="px-6 py-2.5 text-slate-700 text-sm">{item.phillips}</td>
+                            <td className="px-6 py-2.5 text-slate-700 text-sm">{item.halley}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+              </>
+              )}
+
+              {/* Section 4: 성경 보존, 사본 사용, 번역에 대한 말씀 */}
+              {lecture.week === 2 && (
+              <section>
+                <div className="flex items-center gap-4 mb-8">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-brand-600 font-black text-xl border border-slate-100 shadow-sm">1</span>
+                  <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">성경 보존, 사본 사용, 번역에 대한 말씀</h2>
+                </div>
+
+                <div className="space-y-8">
+                  {/* 1. 성경 보존 */}
+                  <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                    <h3 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-200 pb-3">성경 보존에 대한 말씀</h3>
+                    <div className="space-y-4">
+                      {preservationVerses.map((verse, idx) => (
+                        <div key={idx} className="space-y-2 bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
+                          <span className="inline-flex items-center px-2.5 py-1 bg-brand-50 text-brand-700 text-xs font-bold rounded-md">
+                            {verse.reference}
+                          </span>
+                          <p className="text-slate-800 leading-relaxed font-medium">"{verse.text}"</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 2. 사본 사용 */}
+                  <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                    <h3 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-200 pb-3">사본 사용에 대한 말씀</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {manuscriptUsageVerses.map((verse, idx) => (
+                        <div key={idx} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                          <span className="block text-brand-700 text-xs font-bold mb-1">{verse.reference}</span>
+                          <p className="text-slate-700 text-sm font-medium">{verse.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 3. 번역 사용 */}
+                  <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                    <h3 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-200 pb-3">번역 사용에 대한 말씀</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {translationUsageVerses.map((verse, idx) => (
+                        <div key={idx} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                          <span className="block text-brand-700 text-xs font-bold mb-1">{verse.reference}</span>
+                          <p className="text-slate-700 text-sm font-medium">{verse.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+              )}
+
+              {/* Section 5: 성경 사본 및 번역의 역사 (연대순) */}
+              {lecture.week === 3 && (
+              <section>
+                <div className="flex items-center gap-4 mb-8">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-brand-600 font-black text-xl border border-slate-100 shadow-sm">1</span>
+                  <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">성경 사본 및 번역의 역사 (연대순)</h2>
+                </div>
+
+                <div className="space-y-8">
+                  {/* 구약 Timeline */}
+                  <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                    <h3 className="text-xl font-bold text-slate-800 mb-8 pb-4 border-b border-slate-100">구약 사본</h3>
+                    <div className="relative border-l-2 border-slate-100 ml-3 space-y-8">
+                      {otManuscripts.map((item, idx) => (
+                        <div key={idx} className="relative pl-6">
+                          <div className="absolute w-3 h-3 bg-brand-500 rounded-full -left-[7px] top-1.5 ring-4 ring-white"></div>
+                          <div className="mb-1">
+                            <span className="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded-md">{item.period}</span>
+                          </div>
+                          <h4 className="text-base font-bold text-slate-800 mt-2 mb-1">{item.title}</h4>
+                          <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{item.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 신약 Timeline */}
+                  <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                    <h3 className="text-xl font-bold text-slate-800 mb-8 pb-4 border-b border-slate-100">신약사본 및 성경전서</h3>
+                    <div className="relative border-l-2 border-slate-100 ml-3 space-y-8">
+                      {ntManuscripts.map((item, idx) => (
+                        <div key={idx} className="relative pl-6">
+                          <div className="absolute w-3 h-3 bg-brand-500 rounded-full -left-[7px] top-1.5 ring-4 ring-white"></div>
+                          <div className="mb-1">
+                            <span className="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded-md">{item.period}</span>
+                          </div>
+                          <h4 className="text-base font-bold text-slate-800 mt-2 mb-1">{item.title}</h4>
+                          <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{item.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+              )}
+
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <CommentSection lectureId={lecture.week} />
+
+      <div className="flex justify-between items-center mt-8">
+        <button
+          onClick={onPrev}
+          disabled={!hasPrev}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-colors ${
+            hasPrev
+              ? 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300'
+              : 'opacity-50 cursor-not-allowed text-slate-400'
+          }`}
+        >
+          <ChevronLeft className="w-4 h-4" />
+          이전 강의
+        </button>
+        <button
+          onClick={onNext}
+          disabled={!hasNext}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-colors ${
+            hasNext
+              ? 'bg-brand-600 text-white hover:bg-brand-700 shadow-sm'
+              : 'opacity-50 cursor-not-allowed bg-slate-200 text-slate-500'
+          }`}
+        >
+          다음 강의
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
