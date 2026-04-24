@@ -17,8 +17,16 @@
   --color-brand-800: #2e4e6c;
   --color-brand-900: #29425a;
   
-  --color-accent-400: #e9c46a;
-  --color-accent-500: #ceae75;
+  --color-accent-50: #f5f3ff;
+  --color-accent-100: #ede9fe;
+  --color-accent-200: #ddd6fe;
+  --color-accent-300: #c4b5fd;
+  --color-accent-400: #a78bfa;
+  --color-accent-500: #8b5cf6;
+  --color-accent-600: #7c3aed;
+  --color-accent-700: #6d28d9;
+  --color-accent-800: #5b21b6;
+  --color-accent-900: #4c1d95;
 }
 
 @layer base {

@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { BookOpen, Clock, ShieldCheck, Users } from 'lucide-react';
+import { BookOpen, Clock, ShieldCheck, Users, Headphones, PenTool } from 'lucide-react';
 import { curriculumData } from '../data/curriculum';
 
 interface HomeProps {
@@ -59,6 +59,45 @@ export default function Home({ onSelectLecture }: HomeProps) {
             완전한 보존의 증거
           </div>
         </div>
+
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto text-left">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-2xl p-5 shadow-sm flex items-start gap-4 hover:shadow-md hover:bg-white transition-all"
+          >
+            <div className="bg-slate-100 p-2.5 rounded-xl text-slate-600 mt-0.5 shrink-0">
+              <PenTool className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-800 text-sm mb-1.5">도입 ~ 3주차 (기초 뼈대)</h3>
+              <p className="text-slate-600 text-[13px] leading-relaxed">
+                다양한 저자들의 책을 바탕으로 직접 발췌하여 정리한 자료입니다. 
+              </p>
+            </div>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-2xl p-5 shadow-sm flex items-start gap-4 hover:shadow-md border-b-2 hover:border-b-accent-500 hover:bg-white transition-all group"
+          >
+            <div className="bg-accent-50 p-2.5 rounded-xl text-accent-600 mt-0.5 shrink-0 group-hover:scale-110 transition-transform">
+              <Headphones className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-800 text-sm mb-1.5 flex items-center gap-2">
+                4주차 ~ 9주차 (심화 과정 통합)
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-accent-100 text-accent-700 text-[9px] uppercase tracking-wider font-black shadow-sm">오디오 지원</span>
+              </h3>
+              <p className="text-slate-600 text-[13px] leading-relaxed">
+                관련 내용 49개의 자료를 바탕으로 노트북LM으로 편집하였으며, <span className="font-bold text-accent-700">오디오 기능</span>을 제공합니다.
+              </p>
+            </div>
+          </motion.div>
+        </div>
       </header>
 
       {/* Introduction Banner (Week 0) */}
@@ -111,12 +150,12 @@ export default function Home({ onSelectLecture }: HomeProps) {
             className={`group rounded-[2.5rem] p-8 border transition-all duration-500 cursor-pointer flex flex-col h-full relative overflow-hidden ${
               lecture.week <= 3 
                 ? "bg-slate-50 border-brand-200/60 shadow-sm hover:shadow-xl hover:shadow-brand-100 hover:border-brand-300"
-                : "bg-white border-slate-200 shadow-sm hover:shadow-2xl hover:shadow-brand-100 hover:border-brand-300"
+                : "bg-gradient-to-br from-accent-50/50 to-white border-accent-200/60 shadow-sm hover:shadow-2xl hover:shadow-accent-200 hover:border-accent-400"
             }`}
           >
             {/* Background Accent */}
             <div className={`absolute top-0 right-0 w-32 h-32 rounded-bl-[120px] -mr-16 -mt-16 transition-all group-hover:scale-150 duration-700 ${
-              lecture.week <= 3 ? "bg-brand-100/50 group-hover:bg-brand-100" : "bg-brand-50 group-hover:bg-brand-100"
+              lecture.week <= 3 ? "bg-brand-100/50 group-hover:bg-brand-100" : "bg-accent-100/50 group-hover:bg-accent-200/60"
             }`}></div>
             
             <div className="relative z-10 h-full flex flex-col">
@@ -124,35 +163,45 @@ export default function Home({ onSelectLecture }: HomeProps) {
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <div className={`absolute inset-0 blur-md opacity-20 group-hover:opacity-40 transition-opacity ${
-                      lecture.week <= 3 ? "bg-accent-500" : "bg-brand-500"
+                      lecture.week <= 3 ? "bg-brand-500" : "bg-accent-500"
                     }`}></div>
                     <span className={`relative w-10 h-10 rounded-xl text-white flex items-center justify-center text-sm font-black shadow-xl ${
-                      lecture.week <= 3 ? "bg-brand-800" : "bg-slate-900"
+                      lecture.week <= 3 ? "bg-brand-800" : "bg-accent-700"
                     }`}>
                       {lecture.week}
                     </span>
                   </div>
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Week</span>
                 </div>
-                <div className="text-[9px] font-black text-brand-600 uppercase tracking-[0.2em] bg-brand-50 px-3 py-1.5 rounded-full border border-brand-100/50">
+                <div className={`text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border ${
+                  lecture.week <= 3 
+                    ? "text-brand-600 bg-brand-50 border-brand-100/50" 
+                    : "text-accent-700 bg-accent-50 border-accent-200/50"
+                }`}>
                   {lecture.stageTitle.split('(')[0].trim()}
                 </div>
               </div>
 
-              <h3 className="text-2xl font-black text-slate-900 mb-5 group-hover:text-brand-700 transition-colors leading-[1.2] tracking-tight">
+              <h3 className={`text-2xl font-black mb-5 transition-colors leading-[1.2] tracking-tight ${
+                lecture.week <= 3 ? "text-slate-900 group-hover:text-brand-700" : "text-slate-900 group-hover:text-accent-700"
+              }`}>
                 {lecture.title}
               </h3>
               
-              <p className="text-slate-500 text-sm leading-[1.8] line-clamp-3 mb-10 flex-grow font-medium tracking-tight">
+              <p className="text-slate-500 text-sm leading-[1.8] line-clamp-3 flex-grow font-medium tracking-tight mb-10">
                 {lecture.description}
               </p>
               
               <div className="pt-8 border-t border-slate-100 flex items-center justify-between mt-auto">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-accent-400 animate-pulse"></div>
+                  <div className={`w-2 h-2 rounded-full animate-pulse ${
+                    lecture.week <= 3 ? "bg-brand-400" : "bg-accent-400"
+                  }`}></div>
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Available Now</span>
                 </div>
-                <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm border border-slate-100">
+                <div className={`w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center transition-all duration-500 shadow-sm border border-slate-100 min-w-12 group-hover:text-white group-hover:scale-110 group-hover:rotate-6 ${
+                  lecture.week <= 3 ? "group-hover:bg-brand-600" : "group-hover:bg-accent-600"
+                }`}>
                   <BookOpen className="w-6 h-6 text-slate-400 group-hover:text-white" />
                 </div>
               </div>
