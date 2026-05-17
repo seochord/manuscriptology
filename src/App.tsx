@@ -20,7 +20,8 @@ export default function App() {
   };
 
   const handleNext = () => {
-    if (currentWeek !== null && currentWeek < 9) {
+    const maxWeek = Math.max(...curriculumData.map(c => c.week));
+    if (currentWeek !== null && currentWeek < maxWeek) {
       setCurrentWeek(currentWeek + 1);
       window.scrollTo(0, 0);
     }

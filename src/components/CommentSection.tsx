@@ -70,7 +70,7 @@ export default function CommentSection({ lectureId }: CommentSectionProps) {
           <h3 className="text-2xl font-black text-slate-900 tracking-tight">댓글</h3>
         </div>
         <p className="text-slate-500 font-medium">
-          강의 내용에 대한 수정 제안, 반박, 또는 추가 의견을 자유롭게 남겨주세요.
+          느낀점 또는 의견을 자유롭게 남겨주세요.
         </p>
       </div>
 
