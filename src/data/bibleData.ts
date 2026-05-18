@@ -17,7 +17,7 @@ export const recordingVerses = [
   {
     "reference": "창 15:1",
     "text": "이 일들이 있은 후에 주의 말씀이 현시로 아브람에게 임하여 말씀하시기를, “아브람아, 두려워하지 말라. 나는 너의 방패요, 너의 지극히 위대한 보상이라.” 하셨느니라.",
-    "lesson": "말씀히 첫 현시(vision)으로 나타남"
+    "lesson": "말씀이 첫 현시(vision)으로 나타남"
   },
   {
     "reference": "출 17:14",

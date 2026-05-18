@@ -76,7 +76,7 @@ export default function BibleOverview({ lecture, onBack, onNext, onPrev, hasNext
                         </p>
 
                         <p className="text-lg md:text-2xl text-slate-800 leading-[1.8] break-keep text-justify font-handwriting">
-                          그러므로 우리는 진리의 말씀을 바르게 나누어 공부함으로써 하나님 앞에 부끄러울 것이 없는 온전한 일꾼으로 서야 합니다. 말씀을 영혼의 양식보다 소중히 여기고 주야로 묵상하며, 배운 바를 삶에서 온전히 실행하는 자가 되어야 합니다. 주를 두려워하는 마음으로 말씀을 상고하고 그 안에 깊이 거할 때, 비로소 우리의 길이 형통하고 진정한 성공이 뒤따르며 하나님이 보살피시는 축복된 신앙의 길을 걷게 될 것입니다.
+                          그러므로 우리는 진리의 말씀을 바르게 나누어 공부함으로써 하나님 앞에 부끄러울 것이 없는 온전한 일꾼으로 서야 합니다. 말씀을 몸의 양식보다 소중히 여기고 주야로 묵상하며, 배운 바를 삶에서 온전히 실행하는 자가 되어야 합니다. 주를 두려워하는 마음으로 말씀을 상고하고 그 안에 깊이 거할 때, 비로소 우리의 길이 형통하고 진정한 성공이 뒤따르며 하나님이 보살피시는 축복된 신앙의 길을 걷게 될 것입니다.
                         </p>
                       </div>
 
@@ -502,8 +502,8 @@ export default function BibleOverview({ lecture, onBack, onNext, onPrev, hasNext
                         ) : (
                           <>
                             <div className="flex items-center gap-4 mb-6">
-                              <span className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-slate-50 text-brand-600 font-bold text-lg border border-slate-100 shadow-sm">{section.heading.split('.')[0] || sIdx}</span>
-                              <h3 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight leading-tight">{section.heading.replace(/^\d+\.\s*/, '')}</h3>
+                              <span className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-slate-50 text-brand-600 font-bold text-lg border border-slate-100 shadow-sm">{sIdx + 1}</span>
+                              <h3 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight leading-tight">{section.heading.replace(/^(?:[\d.]+|•)?\s*/, '')}</h3>
                             </div>
                             <div className="space-y-4 ml-2 md:ml-14">
                                {section.paragraphs.map((p, pIdx) => {

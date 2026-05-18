@@ -44,28 +44,39 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
     });
   };
 
+  const formatBoldAndLinks = (str: string) => {
+    const parts = str.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, idx) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={idx} className="font-bold text-slate-900">{renderTextWithLinks(part.slice(2, -2))}</strong>;
+      }
+      return <span key={idx}>{renderTextWithLinks(part)}</span>;
+    });
+  };
+
   const renderFormattedText = (text: string, isCaption: boolean = false) => {
     if (text.includes(' | ')) {
       const parts = text.split(' | ');
       return (
-        <div className={`bg-slate-50 rounded-2xl p-5 md:p-6 border border-slate-100 ${isCaption ? 'w-full' : ''}`}>
+        <div className={`bg-slate-50 rounded-2xl p-5 md:p-6 border border-slate-100 my-6 ${isCaption ? 'w-full' : ''}`}>
           <h3 className="text-lg font-bold text-slate-900 mb-4 pb-4 border-b border-slate-200">
-            {renderTextWithLinks(parts[0])}
+            {formatBoldAndLinks(parts[0])}
           </h3>
           <ul className="space-y-3">
             {parts.slice(1).map((part, idx) => {
               const spText = part.trim();
               if (!spText) return null;
               const isVerse = /^-\s?[가-힣]{1,2}\s?\d+/.test(spText);
+              const content = isVerse ? spText.replace(/^-\s?/, '').trim() : spText;
               
               return (
-                <li key={idx} className="flex items-start gap-3 text-slate-700 leading-[1.8]">
+                <li key={idx} className="flex items-start gap-4 text-slate-700 leading-[1.8]">
                   {isVerse ? (
                     <span className={`mt-1 font-bold text-lg ${lecture.week <= 3 ? "text-brand-500" : "text-accent-500"}`}>•</span>
                   ) : (
-                    <span className={`mt-1.5 text-sm ${lecture.week <= 3 ? "text-brand-500" : "text-accent-500"}`}>■</span>
+                    <span className={`mt-2 text-xs ${lecture.week <= 3 ? "text-brand-400" : "text-accent-400"}`}>■</span>
                   )}
-                  <span>{renderTextWithLinks(isVerse ? spText.replace(/^-\s?/, '').trim() : spText)}</span>
+                  <span className="flex-1">{formatBoldAndLinks(content)}</span>
                 </li>
               );
             })}
@@ -73,9 +84,30 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
         </div>
       );
     }
+    
+    if (text.trim().startsWith('- ')) {
+      return (
+        <div className="flex items-start gap-3 mt-3 ml-2">
+          <span className={`mt-2.5 text-[10px] ${lecture.week <= 3 ? "text-brand-400" : "text-accent-400"}`}>●</span>
+          <div className="text-slate-700 font-medium leading-[1.8] flex-1">
+            {formatBoldAndLinks(text.trim().substring(2))}
+          </div>
+        </div>
+      );
+    }
+
+    if (text.trim().match(/^\*\*\[.*\]\*\*$/)) {
+      const headerText = text.trim().replace(/^\*\*\[(.*)\]\*\*$/, '$1');
+      return (
+        <h4 className={`text-[15px] font-black mt-8 mb-4 inline-flex items-center px-4 py-1.5 rounded-full border shadow-sm tracking-wide ${lecture.week <= 3 ? 'bg-brand-50 text-brand-700 border-brand-100/50' : 'bg-accent-50 text-accent-700 border-accent-100/50'}`}>
+          {headerText}
+        </h4>
+      );
+    }
+
     return (
-      <p className="text-slate-700 font-medium leading-[2.1]">
-        {renderTextWithLinks(text)}
+      <p className="text-slate-700 font-medium leading-[2.1] mt-5 first:mt-0">
+        {formatBoldAndLinks(text)}
       </p>
     );
   };
@@ -149,7 +181,7 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
             <div className="space-y-24 text-slate-800 text-lg leading-[2]">
               {lecture.content.map((section, idx) => {
                 const isStageSubTitle = section.heading.startsWith('---') && section.heading.endsWith('---');
-                const match = !isStageSubTitle ? section.heading.match(/^(\d+)\.?\s*(.*)/) : null;
+                const match = !isStageSubTitle ? section.heading.match(/^(?:[\d.]+|•)?\s*(.*)/) : null;
 
                 return (
                   <section key={idx} className={`relative ${isStageSubTitle ? 'mt-16 first:mt-0' : ''}`}>
@@ -166,18 +198,15 @@ export default function LectureViewer({ lecture, onBack, onNext, onPrev, hasNext
                     ) : (
                       <div className="flex items-center gap-6 mb-10">
                         <span className={`flex items-center justify-center shrink-0 w-12 h-12 rounded-2xl font-black text-xl border shadow-sm ${
-                          match 
-                            ? lecture.week <= 3 
-                              ? 'bg-brand-50 text-brand-600 border-brand-100' 
-                              : 'bg-accent-50 text-accent-600 border-accent-100'
-                            : 'bg-slate-50 text-slate-400 border-slate-100'
+                          lecture.week <= 3 
+                            ? 'bg-brand-50 text-brand-600 border-brand-100' 
+                            : 'bg-accent-50 text-accent-600 border-accent-100'
                         }`}>
-                          {match ? match[1] : idx + 1}
+                          {idx + 1}
                         </span>
                         <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
-                          {match ? match[2] : section.heading}
+                          {match ? match[1] : section.heading}
                         </h2>
-                        {!match && <div className="flex-grow h-px bg-gradient-to-r from-slate-100 to-transparent"></div>}
                       </div>
                     )}
                     <div className="space-y-8">
