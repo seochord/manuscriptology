@@ -40,7 +40,7 @@ export default function Home({ onSelectLecture }: HomeProps) {
         </h1>
         <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium tracking-tight mb-8">
           영원불변한 하나님의 말씀이 어떤 역사적 과정과 절대적인 섭리 속에서 
-          완벽하게 보존되어 우리에게 주어졌는지 <span className="text-brand-700 font-black">7주의 여정</span>을 통해 생생히 확인해 보세요.
+          완벽하게 보존되어 우리에게 주어졌는지 <span className="text-brand-700 font-black">8주의 여정</span>을 통해 생생히 확인해 보세요.
         </p>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-base font-bold text-slate-700 bg-white/60 py-4 px-8 rounded-full border border-slate-200/60 shadow-sm max-w-4xl mx-auto backdrop-blur-md">
@@ -89,11 +89,11 @@ export default function Home({ onSelectLecture }: HomeProps) {
             </div>
             <div>
               <h3 className="font-bold text-slate-800 text-sm mb-1.5 flex items-center gap-2">
-                4주차 ~ 6주차 (심화 과정 통합)
+                4주차 ~ 8주차 (심화 과정 통합)
                 <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-accent-100 text-accent-700 text-[9px] uppercase tracking-wider font-black shadow-sm">오디오 지원</span>
               </h3>
               <p className="text-slate-600 text-[13px] leading-relaxed">
-                관련 내용 10권 이상의 저서를 바탕으로 노트북LM으로 핵심을 길게 편집하였으며, <span className="font-bold text-accent-700">오디오 기능</span>을 제공합니다.
+                관련 내용 10권 이상의 저서를 바탕으로 핵심을 길게 편집하였으며, <span className="font-bold text-accent-700">오디오 기능</span>을 제공합니다.
               </p>
             </div>
           </motion.div>

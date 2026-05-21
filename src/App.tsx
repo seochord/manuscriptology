@@ -38,6 +38,8 @@ export default function App() {
     ? curriculumData.find(l => l.week === currentWeek) 
     : null;
 
+  const maxWeek = Math.max(...curriculumData.map(c => c.week));
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-brand-100 selection:text-brand-900">
       <nav className="bg-white/70 backdrop-blur-xl border-b border-slate-200/50 sticky top-0 z-40 transition-all duration-500">
@@ -61,12 +63,12 @@ export default function App() {
             <div className="hidden md:flex items-center gap-8">
               <div className="flex flex-col items-end gap-1">
                 <span className="text-[9px] text-slate-400 font-black uppercase tracking-[0.2em]">Learning Progress</span>
-                <span className="text-sm font-black text-slate-900 tabular-nums">{Math.round((currentWeek / 9) * 100)}%</span>
+                <span className="text-sm font-black text-slate-900 tabular-nums">{Math.round((currentWeek / maxWeek) * 100)}%</span>
               </div>
               <div className="w-48 h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/30">
                 <motion.div 
                   initial={{ width: 0 }}
-                  animate={{ width: `${(currentWeek / 9) * 100}%` }}
+                  animate={{ width: `${(currentWeek / maxWeek) * 100}%` }}
                   className="h-full bg-gradient-to-r from-brand-500 via-brand-600 to-brand-700 shadow-[0_0_15px_rgba(88,145,173,0.5)]"
                 />
               </div>
@@ -91,7 +93,7 @@ export default function App() {
                   onBack={handleBack}
                   onNext={handleNext}
                   onPrev={handlePrev}
-                  hasNext={currentWeek < 9}
+                  hasNext={currentWeek < maxWeek}
                   hasPrev={currentWeek > 0}
                 />
               ) : (
@@ -100,7 +102,7 @@ export default function App() {
                   onBack={handleBack}
                   onNext={handleNext}
                   onPrev={handlePrev}
-                  hasNext={currentWeek < 9}
+                  hasNext={currentWeek < maxWeek}
                   hasPrev={currentWeek > 0}
                 />
               )}
