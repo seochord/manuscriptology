@@ -40,7 +40,7 @@ export default function Home({ onSelectLecture }: HomeProps) {
         </h1>
         <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium tracking-tight mb-8">
           영원불변한 하나님의 말씀이 어떤 역사적 과정과 절대적인 섭리 속에서 
-          완벽하게 보존되어 우리에게 주어졌는지 <span className="text-brand-700 font-black">8주의 여정</span>을 통해 생생히 확인해 보세요.
+          완벽하게 보존되어 우리에게 주어졌는지 <span className="text-brand-700 font-black">9주의 여정</span>을 통해 생생히 확인해 보세요.
         </p>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-base font-bold text-slate-700 bg-white/60 py-4 px-8 rounded-full border border-slate-200/60 shadow-sm max-w-4xl mx-auto backdrop-blur-md">
