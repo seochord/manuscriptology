@@ -52,8 +52,8 @@ export default function BibleOverview({ lecture, onBack, onNext, onPrev, hasNext
             </div>
 
             <div className="space-y-24">
-              {/* Section 1: 서론 및 말씀의 보물창고 */}
-              {lecture.week === 0 && (
+              {/* Section 1: 서론 및 말씀의 보물창고 (1주차) */}
+              {lecture.week === 1 && (
                 <>
                 <section className="mb-24">
                   <div className="flex items-center gap-4 mb-8">
@@ -142,8 +142,8 @@ export default function BibleOverview({ lecture, onBack, onNext, onPrev, hasNext
                 </>
               )}
 
-              {/* Section 2: 성경의 구성 */}
-              {lecture.week === 1 && (
+              {/* Section 2: 성경의 구성 (2주차) */}
+              {lecture.week === 2 && (
                 <>
                 <section className="mb-24">
                   <div className="flex items-center gap-4 mb-8">
@@ -388,8 +388,8 @@ export default function BibleOverview({ lecture, onBack, onNext, onPrev, hasNext
                 </>
               )}
 
-              {/* Section 4: 성경 보존, 사본 사용, 번역에 대한 말씀 */}
-              {lecture.week === 2 && (
+              {/* Section 4: 성경 보존, 사본 사용, 번역에 대한 말씀 (3주차) */}
+              {lecture.week === 3 && (
                 <section>
                   <div className="flex items-center gap-4 mb-8">
                     <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-brand-600 font-black text-xl border border-slate-100 shadow-sm">1</span>
@@ -441,8 +441,8 @@ export default function BibleOverview({ lecture, onBack, onNext, onPrev, hasNext
                 </section>
               )}
 
-              {/* Section 5: 성경 사본 및 번역의 역사 (연대순) */}
-              {lecture.week === 3 && (
+              {/* Section 5: 성경 사본 및 번역의 역사 (연대순) (4주차) */}
+              {lecture.week === 4 && (
                 <section>
                   <div className="flex items-center gap-4 mb-8">
                     <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 text-brand-600 font-black text-xl border border-slate-100 shadow-sm">1</span>
@@ -485,59 +485,6 @@ export default function BibleOverview({ lecture, onBack, onNext, onPrev, hasNext
                     </div>
                   </div>
                 </section>
-              )}
-
-              {/* Section 6: Generic Content for Week 4 and above */}
-              {lecture.week >= 4 && lecture.content && (
-                <div className="space-y-16">
-                  {lecture.content.map((section, sIdx) => {
-                    const isDivider = section.heading.startsWith('---');
-                    
-                    return (
-                      <section key={sIdx} className={isDivider ? 'pt-8 border-t border-slate-100' : ''}>
-                        {isDivider ? (
-                          <div className="text-center mb-12">
-                             <h2 className="text-2xl md:text-3xl font-black text-brand-600 tracking-tight">{section.heading.replace(/-/g, '').trim()}</h2>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="flex items-center gap-4 mb-6">
-                              <span className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-slate-50 text-brand-600 font-bold text-lg border border-slate-100 shadow-sm">{sIdx + 1}</span>
-                              <h3 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight leading-tight">{section.heading.replace(/^(?:[\d.]+|•)?\s*/, '')}</h3>
-                            </div>
-                            <div className="space-y-4 ml-2 md:ml-14">
-                               {section.paragraphs.map((p, pIdx) => {
-                                 const isHighlight = p.includes(':') && p.split(':')[0].length < 15;
-                                 if (isHighlight) {
-                                   const [title, ...rest] = p.split(':');
-                                   return (
-                                     <div key={pIdx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:border-brand-200 transition-colors">
-                                        <h4 className="font-bold text-brand-700 mb-2">{title}</h4>
-                                        <p className="text-slate-700 leading-relaxed">{rest.join(':').trim()}</p>
-                                     </div>
-                                   );
-                                 }
-                                 return (
-                                  <p key={pIdx} className="text-[17px] text-slate-700 leading-loose border-l-2 border-slate-100 pl-4 py-1">
-                                    {p}
-                                  </p>
-                                 );
-                               })}
-                            </div>
-                          </>
-                        )}
-                      </section>
-                    );
-                  })}
-                  
-                  {lecture.quote && (
-                     <div className="mt-20 bg-slate-900 text-white rounded-[2rem] p-10 md:p-14 text-center shadow-2xl relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-brand-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <p className="text-2xl md:text-3xl font-medium leading-loose italic relative z-10 text-slate-200">&quot;{lecture.quote.text}&quot;</p>
-                        <p className="text-brand-400 mt-8 font-bold tracking-widest uppercase relative z-10">- {lecture.quote.author} -</p>
-                     </div>
-                  )}
-                </div>
               )}
 
             </div>
