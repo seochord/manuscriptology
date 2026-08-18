@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { BookMarked } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Home from './components/Home';
-import LectureViewer from './components/LectureViewer';
 import BibleOverview from './components/BibleOverview';
 import { curriculumData } from './data/curriculum';
 
@@ -28,7 +27,7 @@ export default function App() {
   };
 
   const handlePrev = () => {
-    if (currentWeek !== null && currentWeek > 0) {
+    if (currentWeek !== null && currentWeek > minWeek) {
       setCurrentWeek(currentWeek - 1);
       window.scrollTo(0, 0);
     }
@@ -38,6 +37,7 @@ export default function App() {
     ? curriculumData.find(l => l.week === currentWeek) 
     : null;
 
+  const minWeek = Math.min(...curriculumData.map(c => c.week));
   const maxWeek = Math.max(...curriculumData.map(c => c.week));
 
   return (
@@ -87,25 +87,14 @@ export default function App() {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              {currentLecture.week <= 3 ? (
-                <BibleOverview 
-                  lecture={currentLecture} 
-                  onBack={handleBack}
-                  onNext={handleNext}
-                  onPrev={handlePrev}
-                  hasNext={currentWeek < maxWeek}
-                  hasPrev={currentWeek > 0}
-                />
-              ) : (
-                <LectureViewer 
-                  lecture={currentLecture} 
-                  onBack={handleBack}
-                  onNext={handleNext}
-                  onPrev={handlePrev}
-                  hasNext={currentWeek < maxWeek}
-                  hasPrev={currentWeek > 0}
-                />
-              )}
+              <BibleOverview 
+                lecture={currentLecture} 
+                onBack={handleBack}
+                onNext={handleNext}
+                onPrev={handlePrev}
+                hasNext={currentWeek < maxWeek}
+                hasPrev={currentWeek > minWeek}
+              />
             </motion.div>
           ) : (
             <motion.div
