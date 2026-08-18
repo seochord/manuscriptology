@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { BookOpen, Clock, ShieldCheck, Users, Headphones, PenTool } from 'lucide-react';
+import { BookOpen, ShieldCheck } from 'lucide-react';
 import { curriculumData } from '../data/curriculum';
 
 interface HomeProps {
@@ -7,18 +7,6 @@ interface HomeProps {
 }
 
 export default function Home({ onSelectLecture }: HomeProps) {
-  // Group by stage
-  const stages = curriculumData.reduce((acc, lecture) => {
-    if (!acc[lecture.stage]) {
-      acc[lecture.stage] = {
-        title: lecture.stageTitle,
-        lectures: []
-      };
-    }
-    acc[lecture.stage].lectures.push(lecture);
-    return acc;
-  }, {} as Record<number, { title: string; lectures: typeof curriculumData }>);
-
   return (
     <div className="max-w-6xl mx-auto pb-24 relative">
       {/* Decorative Background Elements */}
@@ -40,7 +28,7 @@ export default function Home({ onSelectLecture }: HomeProps) {
         </h1>
         <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium tracking-tight mb-8">
           영원불변한 하나님의 말씀이 어떤 역사적 과정과 절대적인 섭리 속에서 
-          완벽하게 보존되어 우리에게 주어졌는지 <span className="text-brand-700 font-black">9주의 여정</span>을 통해 생생히 확인해 보세요.
+          완벽하게 보존되어 우리에게 주어졌는지, 사본학 초보자를 위해 쉬운 내용부터 어려운 내용 순으로 구성한 <span className="text-brand-700 font-black">4주의 여정</span>을 통해 생생히 확인해 보세요.
         </p>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-base font-bold text-slate-700 bg-white/60 py-4 px-8 rounded-full border border-slate-200/60 shadow-sm max-w-4xl mx-auto backdrop-blur-md">
@@ -60,55 +48,35 @@ export default function Home({ onSelectLecture }: HomeProps) {
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto text-left">
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-2xl p-5 shadow-sm flex items-start gap-4 hover:shadow-md hover:bg-white transition-all"
-          >
-            <div className="bg-slate-100 p-2.5 rounded-xl text-slate-600 mt-0.5 shrink-0">
-              <PenTool className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-800 text-sm mb-1.5">도입 ~ 3주차 (기초 뼈대)</h3>
-              <p className="text-slate-600 text-[13px] leading-relaxed">
-                다양한 저자들의 책을 바탕으로 직접 발췌하여 정리한 자료입니다. 
-              </p>
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-2xl p-5 shadow-sm flex items-start gap-4 hover:shadow-md border-b-2 hover:border-b-accent-500 hover:bg-white transition-all group"
-          >
-            <div className="bg-accent-50 p-2.5 rounded-xl text-accent-600 mt-0.5 shrink-0 group-hover:scale-110 transition-transform">
-              <Headphones className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-800 text-sm mb-1.5 flex items-center gap-2">
-                4주차 ~ 8주차 (심화 과정 통합)
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-accent-100 text-accent-700 text-[9px] uppercase tracking-wider font-black shadow-sm">오디오 지원</span>
-              </h3>
-              <p className="text-slate-600 text-[13px] leading-relaxed">
-                관련 내용 10권 이상의 저서를 바탕으로 핵심을 길게 편집하였으며, <span className="font-bold text-accent-700">오디오 기능</span>을 제공합니다.
-              </p>
-            </div>
-          </motion.div>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 max-w-4xl mx-auto text-left">
+          {curriculumData.map((lecture, idx) => (
+            <motion.div
+              key={lecture.week}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.08 }}
+              className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-2xl px-5 py-3 shadow-sm flex items-center gap-3 hover:shadow-md hover:bg-white transition-all"
+            >
+              <span className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs font-black shrink-0">
+                {lecture.week}
+              </span>
+              <span className="text-slate-700 text-[13px] font-bold leading-tight">
+                {lecture.stageTitle.split('·')[1]?.trim() ?? lecture.stageTitle}
+              </span>
+            </motion.div>
+          ))}
         </div>
       </header>
 
-      {/* Introduction Banner (Week 0) */}
-      {curriculumData.find(l => l.week === 0) && (
+      {/* Week 1 Banner (Introduction) */}
+      {curriculumData.find(l => l.week === 1) && (
         <div className="px-4 md:px-0 mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             whileHover={{ y: -4, scale: 1.01 }}
-            onClick={() => onSelectLecture(0)}
+            onClick={() => onSelectLecture(1)}
             className="group bg-gradient-to-br from-brand-900 to-slate-900 rounded-[2.5rem] p-8 md:p-12 border border-brand-800 shadow-2xl hover:shadow-brand-900/50 transition-all duration-500 cursor-pointer relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8"
           >
             {/* Background Accent */}
@@ -117,14 +85,14 @@ export default function Home({ onSelectLecture }: HomeProps) {
             <div className="relative z-10 flex-1">
               <div className="flex items-center gap-3 mb-6">
                 <div className="text-[10px] font-black text-accent-400 uppercase tracking-[0.2em] bg-brand-800/50 px-4 py-2 rounded-full border border-brand-700/50">
-                  {curriculumData.find(l => l.week === 0)?.stageTitle}
+                  {curriculumData.find(l => l.week === 1)?.stageTitle}
                 </div>
               </div>
               <h3 className="text-3xl md:text-4xl font-black text-white mb-4 group-hover:text-accent-400 transition-colors leading-[1.2] tracking-tight">
-                {curriculumData.find(l => l.week === 0)?.title}
+                {curriculumData.find(l => l.week === 1)?.title}
               </h3>
               <p className="text-slate-300 text-base md:text-lg leading-[1.8] font-medium tracking-tight max-w-3xl">
-                {curriculumData.find(l => l.week === 0)?.description}
+                {curriculumData.find(l => l.week === 1)?.description}
               </p>
             </div>
 
@@ -138,7 +106,7 @@ export default function Home({ onSelectLecture }: HomeProps) {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-0">
-        {curriculumData.filter(l => l.week !== 0).map((lecture, idx) => (
+        {curriculumData.filter(l => l.week !== 1).map((lecture, idx) => (
           <motion.div
             key={lecture.week}
             initial={{ opacity: 0, y: 20 }}
@@ -178,7 +146,7 @@ export default function Home({ onSelectLecture }: HomeProps) {
                     ? "text-brand-600 bg-brand-50 border-brand-100/50" 
                     : "text-accent-700 bg-accent-50 border-accent-200/50"
                 }`}>
-                  {lecture.stageTitle.split('(')[0].trim()}
+                  {lecture.stageTitle.split('·')[0].trim()}
                 </div>
               </div>
 
